@@ -6,18 +6,17 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React from "react";
 //import type Node from 'react';
-import {NavigationContainer} from '@react-navigation/native'
-import CoinsStack from './src/res/coins/CoinsStack';
+import { NavigationContainer } from "@react-navigation/native";
+import CoinsStack from "./src/components/coins/CoinsStack";
 
 const App = () => {
-  return (
-   <NavigationContainer>
-      <CoinsStack/>
-   </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <CoinsStack />
+        </NavigationContainer>
+    );
 };
-
 
 export default App;

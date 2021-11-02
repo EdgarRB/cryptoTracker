@@ -12,8 +12,12 @@ const CoinsStack = () => {
             screenOptions={{
                 headerStyle: {
                     backgroundColor: Colors.blackPearl,
+                    shadowColor: Colors.blackPearl,
                 },
                 headerTintColor: Colors.white,
+                headerTitleStyle: {
+                    textAlign: "center",
+                },
             }}
         >
             <Stack.Screen name="Coins" component={CoinsScreen} />
