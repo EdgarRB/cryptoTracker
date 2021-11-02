@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Http from "../../libs/http";
 import CoinsItem from "./CoinsItem";
+import colors from "../../res/colors";
 
 function CoinsScreen({ navigation }) {
     const [data, setData] = useState({});
@@ -36,7 +37,11 @@ function CoinsScreen({ navigation }) {
     return (
         <View style={styles.container}>
             {loading === true ? (
-                <ActivityIndicator size="large" animating={loading} />
+                <ActivityIndicator
+                    style={styles.loading}
+                    size="large"
+                    animating={loading}
+                />
             ) : null}
 
             <FlatList
@@ -62,7 +67,7 @@ function CoinsScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "darkgray",
+        backgroundColor: colors.charade,
     },
     titleText: {
         color: "white",
@@ -77,6 +82,9 @@ const styles = StyleSheet.create({
     btnText: {
         color: "white",
         textAlign: "center",
+    },
+    loading: {
+        marginTop: 60,
     },
 });
 
