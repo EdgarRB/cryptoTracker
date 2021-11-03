@@ -29,9 +29,9 @@ function CoinsScreen({ navigation }) {
         getData();
     }, []);
 
-    const handlePress = () => {
-        console.log("go to detail");
-        navigation.navigate("CoinDetail");
+    const handlePress = (coin) => {
+        console.log("pasa por aqui");
+        navigation.navigate("CoinDetail", { coin });
     };
 
     return (
@@ -48,18 +48,12 @@ function CoinsScreen({ navigation }) {
                 data={data}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <CoinsItem item={item} />
-                    // <View>
-                    //     <Text>{item.name}</Text>
-                    //     <Text>{item.symbol}</Text>
-                    //     {/* <Text>{item.name}</Text> */}
-                    // </View>
+                    <CoinsItem
+                        item={item}
+                        pressEvent={() => handlePress(item)}
+                    />
                 )}
             />
-            {/* <Text style={styles.titleText}>Coins Screen</Text>
-            <Pressable onPress={handlePress} style={styles.btn}>
-                <Text style={styles.btnText}>Ir a detail</Text>
-            </Pressable> */}
         </View>
     );
 }

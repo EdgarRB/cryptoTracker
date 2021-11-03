@@ -7,7 +7,6 @@ import {
     FlatList,
     Image,
 } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 import colors from "../../res/colors";
 
 const CoinsItem = (props) => {
@@ -20,7 +19,7 @@ const CoinsItem = (props) => {
     };
 
     return (
-        <View style={styles.container}>
+        <Pressable onPress={props.pressEvent} style={styles.container}>
             <View style={styles.row}>
                 <Text style={styles.symbolText}>{props.item.symbol}</Text>
                 <Text style={styles.nameText}>{props.item.name}</Text>
@@ -37,7 +36,7 @@ const CoinsItem = (props) => {
             </View>
 
             {/* <Text>{item.name}</Text> */}
-        </View>
+        </Pressable>
     );
 };
 
