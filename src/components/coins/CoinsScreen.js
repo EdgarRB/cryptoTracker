@@ -10,9 +10,11 @@ import {
 import Http from "../../libs/http";
 import CoinsItem from "./CoinsItem";
 import colors from "../../res/colors";
+import { CoinSearch } from "./coinSearch";
 
 function CoinsScreen({ navigation }) {
     const [data, setData] = useState({});
+    const [allCoins, setAllCoins] = useState({});
     const [loading, setLoading] = useState(false);
 
     const getData = async () => {
@@ -21,6 +23,7 @@ function CoinsScreen({ navigation }) {
             "https://api.coinlore.net/api/tickers/"
         );
         setData(coins.data);
+        setAllCoins(coins.data);
         setLoading(false);
         console.log("coins", coins);
     };
@@ -34,8 +37,20 @@ function CoinsScreen({ navigation }) {
         navigation.navigate("CoinDetail", { coin });
     };
 
+    const handleSearch = (value) => {
+        let filtered = allCoins.filter((coin) => {
+            return (
+                coin.name.toLowerCase().includes(value.toLowerCase()) ||
+                coin.symbol.toLowerCase().includes(value.toLowerCase())
+            );
+        });
+
+        setData(filtered);
+    };
+
     return (
         <View style={styles.container}>
+            <CoinSearch onChange={handleSearch} />
             {loading === true ? (
                 <ActivityIndicator
                     style={styles.loading}

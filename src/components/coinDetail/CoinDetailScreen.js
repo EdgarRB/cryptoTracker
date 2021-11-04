@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, SectionList } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    SectionList,
+    FlatList,
+} from "react-native";
 import colors from "../../res/colors";
+import Http from "../../libs/http";
+import { CoinMarketDetailScreen } from "./CoinMarketItem";
 
 export const CoinDetailScreen = (props) => {
     const [coin, setcoin] = useState({});
-    //const [sections, setSections] = useState([]);
+    const [markets, setMarkets] = useState({});
 
     useEffect(() => {
         console.log("Datos de la moneda", props.route.params.coin);
-        setcoin(props.route.params.coin);
-        //getSections();
+        const coin = props.route.params.coin;
+        setcoin(coin);
+        getMarkets(coin.id);
     }, [props]);
 
     useEffect(() => {
@@ -38,6 +48,15 @@ export const CoinDetailScreen = (props) => {
         //setSections(sections);
     };
 
+    const getMarkets = async (coinId) => {
+        if (coinId) {
+            let url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`;
+
+            const markets = await Http.instance.get(url);
+            setMarkets(markets);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.subHeader}>
@@ -50,6 +69,7 @@ export const CoinDetailScreen = (props) => {
             </View>
             <View>
                 <SectionList
+                    style={styles.section}
                     sections={getSections(coin)}
                     keyExtractor={(item) => item}
                     renderItem={({ item }) => (
@@ -63,6 +83,15 @@ export const CoinDetailScreen = (props) => {
                                 {section.title}
                             </Text>
                         </View>
+                    )}
+                />
+                <Text style={styles.marketTitle}>Markets</Text>
+                <FlatList
+                    style={styles.flatSection}
+                    horizontal={true}
+                    data={markets}
+                    renderItem={({ item }) => (
+                        <CoinMarketDetailScreen item={item} />
                     )}
                 />
             </View>
@@ -104,6 +133,20 @@ const styles = StyleSheet.create({
     sectionText: {
         color: "white",
         fontSize: 14,
+        fontWeight: "bold",
+    },
+    section: {
+        maxHeight: 220,
+    },
+    flatSection: {
+        height: 100,
+        paddingLeft: 15,
+    },
+    marketTitle: {
+        color: "#fff",
+        fontSize: 16,
+        marginBottom: 14,
+        marginLeft: 16,
         fontWeight: "bold",
     },
 });

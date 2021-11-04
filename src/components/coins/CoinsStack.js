@@ -1,7 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import CoinsScreen from "./CoinsScreen";
-import { CoinDetailScreen } from "./CoinDetailScreen";
+import { CoinDetailScreen } from "../coinDetail/CoinDetailScreen";
+import { CoinMarketDetailScreen } from "../coinDetail/CoinMarketItem";
 import Colors from "../../res/colors";
 
 const Stack = createStackNavigator();
@@ -22,6 +23,10 @@ const CoinsStack = () => {
         >
             <Stack.Screen name="Coins" component={CoinsScreen} />
             <Stack.Screen name="CoinDetail" component={CoinDetailScreen} />
+            <Stack.Screen
+                name="CoinMarket"
+                component={CoinMarketDetailScreen}
+            />
         </Stack.Navigator>
     );
 };
