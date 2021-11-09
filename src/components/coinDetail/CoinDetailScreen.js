@@ -6,23 +6,30 @@ import {
     StyleSheet,
     SectionList,
     FlatList,
+    Pressable,
+    Alert,
 } from "react-native";
 import colors from "../../res/colors";
 import Http from "../../libs/http";
 import { CoinMarketDetailScreen } from "./CoinMarketItem";
+import Storage from "../../libs/storage";
 
 export const CoinDetailScreen = (props) => {
     const [coin, setcoin] = useState({});
     const [markets, setMarkets] = useState({});
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         console.log("Datos de la moneda", props.route.params.coin);
         const coin = props.route.params.coin;
         setcoin(coin);
+        getFavorite(coin);
         getMarkets(coin.id);
     }, [props]);
 
     useEffect(() => {
+        debugger;
+
         props.navigation.setOptions({ title: coin.name });
     }, [coin]);
 
@@ -57,15 +64,85 @@ export const CoinDetailScreen = (props) => {
         }
     };
 
+    const toogleFavorite = () => {
+        if (isFavorite) {
+            removeFavorite();
+        } else {
+            addFavorite();
+        }
+    };
+
+    const addFavorite = async () => {
+        debugger;
+        const coinValue = JSON.stringify({ coin });
+        const key = `favorite-${coin.id}`;
+        // static instance = new Storage()
+
+        const stored = await Storage.instance.add(key, coinValue);
+
+        if (stored) {
+            setIsFavorite(true);
+        }
+    };
+
+    const removeFavorite = () => {
+        Alert.alert("Remove favorite", "Are you sure?", [
+            {
+                text: "cancel",
+                onPress: () => {},
+                style: "cancel",
+            },
+            {
+                text: "remove",
+                onPress: async () => {
+                    const key = `favorite-${coin.id}`;
+                    await Storage.instance.remove(key);
+
+                    setIsFavorite(false);
+                },
+                style: "destructive",
+            },
+        ]);
+    };
+
+    const getFavorite = async (coin) => {
+        const key = `favorite-${coin.id}`;
+        try {
+            const favStr = await Storage.instance.get(key);
+            console.log("fav: ", favStr);
+
+            if (favStr !== null) {
+                setIsFavorite(true);
+            }
+        } catch (err) {
+            console.log("get favorites error", err);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.subHeader}>
-                <Image
-                    style={styles.image}
-                    source={{ uri: getSymbolIcon(coin.nameid) }}
-                />
+                <View style={styles.row}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: getSymbolIcon(coin.nameid) }}
+                    />
+                    <Text style={styles.titleText}>{coin.name}</Text>
+                </View>
 
-                <Text style={styles.titleText}>{coin.name}</Text>
+                <Pressable
+                    onPress={toogleFavorite}
+                    style={[
+                        styles.bottonFav,
+                        isFavorite
+                            ? styles.bottonFavRemove
+                            : styles.bottonFavAdd,
+                    ]}
+                >
+                    <Text style={styles.bottonFavText}>
+                        {isFavorite ? "Remove favorite" : "Add favorite"}{" "}
+                    </Text>
+                </Pressable>
             </View>
             <View>
                 <SectionList
@@ -108,10 +185,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.charade,
     },
+    row: {
+        flexDirection: "row",
+    },
     subHeader: {
         backgroundColor: "rgba(0, 0, 0, 0.2)",
         padding: 16,
         flexDirection: "row",
+        justifyContent: "space-between",
     },
     titleText: {
         fontSize: 16,
@@ -147,6 +228,20 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 14,
         marginLeft: 16,
+        fontWeight: "bold",
+    },
+    bottonFav: {
+        padding: 8,
+        borderRadius: 8,
+    },
+    bottonFavAdd: {
+        backgroundColor: colors.picton,
+    },
+    bottonFavRemove: {
+        backgroundColor: colors.carmine,
+    },
+    bottonFavText: {
+        color: colors.white,
         fontWeight: "bold",
     },
 });
