@@ -5,6 +5,8 @@ import FavoritesScreen from "./favoritesScreen";
 import colors from "../../res/colors";
 const Stack = createStackNavigator();
 
+import { CoinDetailScreen } from "../coinDetail/CoinDetailScreen";
+
 export const FavoritesStack = () => {
     return (
         <Stack.Navigator
@@ -20,6 +22,7 @@ export const FavoritesStack = () => {
             }}
         >
             <Stack.Screen name="Favorites" component={FavoritesScreen} />
+            <Stack.Screen name="CoinDetail" component={CoinDetailScreen} />
         </Stack.Navigator>
     );
 };
